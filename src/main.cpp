@@ -1,5 +1,4 @@
 #include <QApplication>
-#include <qfile.h>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
