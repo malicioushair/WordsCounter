@@ -1,6 +1,5 @@
 #pragma once
-
-#include "WordsModel.h"
+#include <QObject>
 
 class QFile;
 
@@ -21,5 +20,6 @@ signals:
 	void fileProcessed();
 
 private:
-	WordsModel m_model;
+	struct Impl;
+	std::unique_ptr<Impl> m_impl;
 };

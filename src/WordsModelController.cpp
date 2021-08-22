@@ -2,32 +2,38 @@
 
 #include <QUrl>
 
+#include "WordsModel.h"
 #include "WordsModelRole.h"
 
+struct WordsModelController::Impl
+{
+	WordsModel model;
+};
 
 WordsModelController::WordsModelController(QObject *parent)
 	: QObject(parent)
+	, m_impl(std::make_unique<Impl>())
 {
-	connect(&m_model, &WordsModel::DataReady, [&] () {
+	connect(&m_impl->model, &WordsModel::DataReady, [&] () {
 		emit fileProcessed();
 	});
 }
 
 QVariantList WordsModelController::GetWords() const
 {
-	const auto text = m_model.data({}, AllTexts);
-	return text.toList();
+	const auto words = m_impl->model.data({}, AllTexts);
+	return words.toList();
 }
 
 QVariantList WordsModelController::GetValues() const
 {
-	const auto values = m_model.data({}, AllValues);
+	const auto values = m_impl->model.data({}, AllValues);
 	return values.toList();
 }
 
 int WordsModelController::GetYAxisMaxValue() const
 {
-	const auto values = m_model.data({}, AllValues);
+	const auto values = m_impl->model.data({}, AllValues);
 	const auto valuesList = values.toList();
 	const auto max = std::max_element(valuesList.cbegin(), valuesList.cend());
 	assert(max != nullptr);
@@ -38,5 +44,5 @@ int WordsModelController::GetYAxisMaxValue() const
 void WordsModelController::ProcessFile(const QUrl & fileUrl)
 {
 	emit fileBeingProcessed();
-	m_model.setData({}, QVariant::fromValue(fileUrl), ReFillData);
+	m_impl->model.setData({}, QVariant::fromValue(fileUrl), ReFillData);
 }

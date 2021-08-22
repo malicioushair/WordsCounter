@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QAbstractListModel>
+#include "NonCopyMovable.h"
 
 class QFile;
 
@@ -12,10 +13,7 @@ public:
 	explicit WordsModel(QObject * parent = nullptr);
 	~WordsModel();
 
-	WordsModel(const WordsModel & other) = delete;
-	WordsModel(const WordsModel && other) = delete;
-	WordsModel & operator=(const WordsModel & other) = delete;
-	WordsModel & operator=(const WordsModel && other) = delete;
+	NON_COPY_MOVABLE(WordsModel)
 
 	[[nodiscard]] int rowCount(const QModelIndex & parent) const override;
 	[[nodiscard]] QVariant data(const QModelIndex & index, int role) const override;
